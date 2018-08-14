@@ -10,5 +10,19 @@ Benefits:
 
 3. Infinite options of stacks - since each project is a Docker stack they can run whatever you want within them. Just need to modify docker-compose files. Out of the box, all the basics are supported.
 
+REQUIREMENTS:
 
+* Vagrant + VirtualBox
+* The VM should run Ubuntu 16.04 or later.
+
+
+NOTES:
+
+The scripts were first created as a way of deploying a Docker based web hosting environment.
+
+This is why I was working on support for SSH-ing into each app, with each app being assigned a unique available port. 
+
+And that's also why the add.sh script has a "redirector" option, for cases where you just want your server (like a VPS) to redirect a subdomain elsewhere.
+
+I left these in for now because they still might be marginally useful even in the context of local development.
 
