@@ -9,9 +9,9 @@ services:
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - /home/dockeruser/certs:/etc/nginx/certs:ro
+      - /home/vagrant/certs:/etc/nginx/certs:ro
       - /etc/nginx/vhost.d
-      - /home/dockeruser/apps/nginx-custom-conf:/etc/nginx/conf.d
+      - /home/vagrant/apps/nginx-custom-conf:/etc/nginx/conf.d
       - /usr/share/nginx/html
     labels: 
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
@@ -22,7 +22,7 @@ services:
     container_name: letsencrypt-nginx-proxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /home/dockeruser/certs:/etc/nginx/certs:rw
+      - /home/vagrant/certs:/etc/nginx/certs:rw
     volumes_from:
            - nginx-proxy
 
