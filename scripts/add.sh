@@ -42,7 +42,7 @@ do
             read subdomain
             echo -e "${cyan}Enter address to redirect to: ${NC}"
             read redirect
-            echo "server { listen 80; server_name $subdomain; return 301 $redirect; }" > /vagrant/projects/nginx-custom-conf/$subdomain.conf
+            echo "server { listen 80; server_name $subdomain; return 301 $redirect; }" > /home/vagrant/projects/nginx-custom-conf/$subdomain.conf
             docker exec -ti nginx-proxy bash -c "service nginx reload"
             exit
             ;;
@@ -76,28 +76,28 @@ echo $pmaport >> used_ports
 
 # Make the app directory and copy the base docker-compose.yml and Dockerfile there
 
-mkdir -p /vagrant/projects/$domain/app
-cp $stack/docker-compose.yml /vagrant/projects/$domain/
+mkdir -p /home/vagrant/projects/$domain/app
+cp $stack/docker-compose.yml /home/vagrant/projects/$domain/
 #cp $stack/Dockerfile /vagrant/projects/$domain/
 
 # Modify the new docker-compose.yml and Dockerfiles to reflect chosen information
 
-sed -i "s/dbrootpass/$dbrootpass/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/namegoeshere/$name/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/domaingoeshere/$domain/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/usergoeshere/$user/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/emailgoeshere/$email/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/passgoeshere/$pass/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/2222/$sshport/g" /vagrant/projects/$domain/docker-compose.yml
-sed -i "s/8181/$pmaport/g" /vagrant/projects/$domain/docker-compose.yml
+sed -i "s/dbrootpass/$dbrootpass/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/namegoeshere/$name/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/domaingoeshere/$domain/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/usergoeshere/$user/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/emailgoeshere/$email/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/passgoeshere/$pass/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/2222/$sshport/g" /home/vagrant/projects/$domain/docker-compose.yml
+sed -i "s/8181/$pmaport/g" /home/vagrant/projects/$domain/docker-compose.yml
 
-chown -R vagrant:vagrant /vagrant/projects/$domain
+chown -R vagrant:vagrant /home/vagrant/projects/$domain
 
 # Build the docker image
 echo -e "${green}=> Building and deploying containers.. ${NC}"
 
 #cd /vagrant/projects/$domain && docker build -t libervis/$name .
-cd /vagrant/projects/$domain && docker-compose up -d
+cd /home/vagrant/projects/$domain && docker-compose up -d
 cd /vagrant/scripts/
 
 #chown -R vagrant:www-data /vagrant/projects/$domain/app
@@ -117,36 +117,15 @@ docker exec -ti $name service ssh start
 if [[ "$stack" == wp_base ]]; then
 
 echo -e "${green}=> Installing WordPress and plugins.. ${NC}"
-
-docker exec -ti $name curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar /var/www/html/
-docker exec -ti $name chmod +x /var/www/html/wp-cli.phar
-docker exec -ti $name mv /var/www/html/wp-cli.phar /usr/local/bin/wp
-
-docker exec -ti $name wp core install --allow-root --url=http://$domain --title=$domain --admin_user=$user --admin_password=$pass --admin_email=$email
-docker exec -ti $name wp plugin install --allow-root iwp-client
-docker exec -ti $name wp plugin install --allow-root force-strong-passwords
-docker exec -ti $name wp plugin activate --allow-root force-strong-passwords
-docker exec -ti $name wp plugin install --allow-root wordfence
-docker exec -ti $name wp plugin activate --allow-root wordfence
-docker exec -ti $name wp plugin install --allow-root wp-mail-smtp
-docker exec -ti $name wp plugin activate --allow-root wp-mail-smtp
-docker exec -ti $name wp plugin delete --allow-root hello
-docker exec -ti $name wp plugin delete --allow-root akismet
+sleep 10
 
 docker exec -ti $name bash -c "echo \"define( 'FTP_HOST', 'localhost:$sshport' );\" >> /var/www/html/wp-config.php"
 docker exec -ti $name bash -c "echo \"define( 'FTP_USER', '$user' );\" >> /var/www/html/wp-config.php"
 docker exec -ti $name bash -c "echo \"define( 'FTP_PASS', '$pass' );\" >> /var/www/html/wp-config.php"
 docker exec -ti $name bash -c "echo \"define( 'FS_METHOD', 'direct' );\" >> /var/www/html/wp-config.php"
 docker exec -ti $name bash -c "echo \"define( 'FTP_BASE', '/var/www/html/' );\" >> /var/www/html/wp-config.php"
-
-docker cp /vagrant/scripts/wp_base/base-theme $name:/var/www/html/wp-content/themes/
-docker exec -ti $name bash -c "mv /var/www/html/wp-content/themes/base-theme /var/www/html/wp-content/themes/base"
-
 docker exec -ti $name bash -c "chown -R $user:www-data /var/www/html/*"
 docker exec -ti $name bash -c "chmod g+wx -R /var/www/html/*"
-
-docker exec -ti $name wp theme activate --allow-root base
-
 fi
 
 docker exec -ti $name bash -c "chown -R $user:www-data /var/www/html"

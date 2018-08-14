@@ -9,6 +9,7 @@ apt install docker-compose -y
 apt install htop
 apt install cockpit
 apt install pwgen
+apt install npm
 
 # Create swap space for database
 
@@ -29,13 +30,13 @@ usermod -aG sudo vagrant
 # Create a dockerweb network for linking web container sets
 
 su vagrant -c 'docker network create nginx-proxy'
-su vagrant -c 'mkdir /vagrant/projects'
+su vagrant -c 'mkdir /home/vagrant/projects'
 
 su vagrant -c 'cd /vagrant/scripts/nginx-proxy/ && docker-compose up -d'
 
 touch used_ports
 
-# docker-compose.yml and Dockerfile should be in /home/vagrant/scripts/wp_base (and php5_base and lamp_base)
+# docker-compose.yml and Dockerfile should be in /vagrant/scripts/wp_base (and php5_base and lamp_base)
 # nginx-proxy docker-compose.yml should be in scripts/nginx-proxy
 
 # devpass: hij1TamaephahS6a

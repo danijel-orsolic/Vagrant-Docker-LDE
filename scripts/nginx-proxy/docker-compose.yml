@@ -11,7 +11,6 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /home/vagrant/certs:/etc/nginx/certs:ro
       - /etc/nginx/vhost.d
-      - /home/vagrant/apps/nginx-custom-conf:/etc/nginx/conf.d
       - /usr/share/nginx/html
     labels: 
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
