@@ -1,0 +1,11 @@
+version: '2'
+
+services:
+  adminer:
+    image: dockette/adminer:dg
+    restart: always
+    ports:
+      - 8000:80
+    environment:
+      VIRTUAL_HOST: adminer.rand.life
+    container_name: adminer
