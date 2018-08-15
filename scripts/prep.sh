@@ -6,10 +6,9 @@ apt update
 apt upgrade
 apt install docker.io -y
 apt install docker-compose -y
-apt install htop
-apt install cockpit
-apt install pwgen
-apt install npm
+apt install htop -y
+apt install pwgen -y
+apt install npm -y
 
 # Create swap space for database
 
@@ -33,6 +32,9 @@ su vagrant -c 'docker network create nginx-proxy'
 su vagrant -c 'mkdir /home/vagrant/projects'
 
 su vagrant -c 'cd /vagrant/scripts/nginx-proxy/ && docker-compose up -d'
+
+docker volume create portainer_data
+docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
 
 touch used_ports
 
