@@ -7,5 +7,5 @@ services:
     ports:
       - 8000:80
     environment:
-      VIRTUAL_HOST: adminer.rand.life
+      VIRTUAL_HOST: adminer.local
     container_name: adminer
