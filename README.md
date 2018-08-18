@@ -2,9 +2,9 @@ This is a simple but powerful way of deploying a local development environment (
 
 The only prerequisites are Vagrant and VirtualBox. On Windows you may also need something like Mountain Duck if you want to be able to access the VM filesystem from your host, since Vagrant FS has issues with symlinks that are needed for things like NPM.
 
-Once you've got that just clone the repo and run vagrant up. 
+Once you've got that just clone the repo and run `vagrant up`. 
 
-Then you can enter your VM by running vagrant ssh.
+Then you can enter your VM by running `vagrant ssh`.
 
 Once inside you can run ./add.sh script, which automates setting up project environments and containers for a few stacks, like WordPress, legacy LAMP with PHP5, and the LEMP stack with PHP7.
 
@@ -24,7 +24,7 @@ The add.sh script automates the project creation task for a few cases, like crea
 
 The project set up automation is hardcoded to use the /home/vagrant/projects directory for your projects, and the vagrant user for running everything, but you can modify the scripts however you wish.
 
-The way automation of project creation with add.sh works is pretty simple. It copies base docker-compose.yml and some associated files of a chosen stack (residing in, for example, scripts/lemp_base), and then replaces placeholder strings like namegoeshere, domaingoeshere etc. with your own inputs. The final docker-compose.yml in the project folder is then ran with docker-compose up -d.
+The way automation of project creation with add.sh works is pretty simple. It copies base docker-compose.yml and some associated files of a chosen stack (residing in, for example, scripts/lemp_base), and then replaces placeholder strings like namegoeshere, domaingoeshere etc. with your own inputs. The final docker-compose.yml in the project folder is then ran with `docker-compose up -d`.
 
 ## Notes:
 
