@@ -32,7 +32,9 @@ services:
             MYSQL_PASSWORD: passgoeshere
 
     namegoeshere-php:
-        image: php:7-fpm-alpine
+        build:
+          context: ./
+          dockerfile: Dockerfile
         container_name: namegoeshere-php
         expose:
             - 9000

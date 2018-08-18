@@ -21,7 +21,7 @@ NC='\033[0m' # No Color
 # $sshport (generate & show) - host port for SSH to container
 
 echo -e "${cyan}Choose the type of stack to deploy: ${NC}"
-options=("WordPress" "Clean LEMP Stack" "Clean LAMP PHP5" "Redirect")
+options=("WordPress" "Clean LEMP Stack" "Clean LAMP PHP7" "Clean LAMP PHP5" "Redirect")
 select opt in "${options[@]}"
 do
     case $opt in
@@ -31,6 +31,10 @@ do
             ;;
         "Clean LEMP Stack")
             stack=lemp_base
+            break
+            ;;
+        "Clean LAMP PHP7")
+            stack=lamp_php7_base
             break
             ;;
         "Clean LAMP PHP5")
@@ -80,6 +84,7 @@ mkdir -p /home/vagrant/projects/$domain/app
 cp $stack/docker-compose.yml /home/vagrant/projects/$domain/
 
 if [[ "$stack" == lemp_base ]]; then
+cp $stack/Dockerfile /home/vagrant/projects/$domain/
 mkdir /home/vagrant/projects/$domain/nginx/
 mkdir /home/vagrant/projects/$domain/db/
 cp $stack/default.conf /home/vagrant/projects/$domain/nginx/
@@ -88,6 +93,9 @@ sed -i "s/namegoeshere/$name/g" /home/vagrant/projects/$domain/nginx/default.con
 sed -i "s/domaingoeshere/$domain/g" /home/vagrant/projects/$domain/nginx/default.conf
 fi
 
+if [[ "$stack" == lamp_php7_base ]]; then
+cp $stack/Dockerfile /home/vagrant/projects/$domain/
+fi
 
 #cp $stack/Dockerfile /vagrant/projects/$domain/
 
