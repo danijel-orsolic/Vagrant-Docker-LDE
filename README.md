@@ -1,33 +1,35 @@
-This is a simple but powerful way of deploying a local development environment with Docker which supports multiple virtual hosts, and works the same on Windows, Linux, and Mac (thanks to Vagrant).
+This is a simple but powerful way of deploying a local development environment (LDE) without resorting to something like XAMPP.
 
-It consists of a near-default VagrantFile, a few bash scripts for setting up the Docker environment within a VM (prep.sh), and adding new projects (add.sh) as well as a few docker-compose.yml template files for some base project options (LEMP stack, LAMP stack, WordPress base).
+The only prerequisites are Vagrant and VirtualBox. On Windows you may also need something like Mountain Duck if you want to be able to access the VM filesystem from your host, since Vagrant FS has issues with symlinks that are needed for things like NPM.
 
-The script replaces placeholder text like namegoeshere with the chosen project name to generate the actual docker-compose.yml from which the containers are created.
+Once you've got that just clone the repo and run vagrant up. 
 
-Stacks that require a MySQL database consist of two containers, one for the database which is called project-db and one for the project.
+Then you can enter your VM by running vagrant ssh.
 
+Once inside you can run ./add.sh script, which automates setting up project environments and containers for a few stacks, like WordPress, legacy LAMP with PHP5, and the LEMP stack with PHP7.
 
-Benefits:
+## Benefits
 
-1. It works the same on Windows, Linux and Mac. Since Vagrant and VirtualBox work on all of them, and the script set runs within the VM, the experience should be identical no matter the base OS. This also avoids the need of using OS-specific stacks like XAMPP, which may have some OS-specific issues.
+* It works the same on Windows, Linux and Mac. No need for XAMPP. You get Linux anywhere, which is what's most used in production environments as well.
 
-2. Multiple virtual hosts out of the box. Thanks to nginx-proxy this single VM can host multiple projects each with their own local domain name. 
+* Multiple virtual hosts out of the box. Thanks to nginx-proxy this single VM can host multiple projects each with their own local domain name. 
 
-3. Infinite options of stacks - since each project is a Docker stack they can run whatever you want within them. Just need to modify docker-compose files. Out of the box, all the basics are supported.
+* Infinite options of stacks - since each project is a Docker stack they can run whatever you want within them. Just need to modify docker-compose files. And if you don't want to run a project in docker you don't have to. Just run them on a port.
 
-Requirements:
+## How it works
 
-* Vagrant + VirtualBox
-* The VM should run Ubuntu 16.04 or later.
+Running vagrant up, according to the VagrantFile configuration, will set up an Ubuntu 18.04 LTS Bionic VM and run a prep.sh script within it. This installs docker and a bunch of other useful tools, and creates a docker set up with an nginx-proxy container and network to support automatic resolving of virtual hosts. It reads the VIRTUAL_HOST environment variable from docker-compose.yml in your project.
 
+The add.sh script automates the project creation task for a few cases, like creating a project stack for WordPress, LAMP with PHP5, and LEMP.
 
-Notes:
+The project set up automation is hardcoded to use the /home/vagrant/projects directory for your projects, and the vagrant user for running everything, but you can modify the scripts however you wish.
 
-The scripts were first created as a way of deploying a Docker based web hosting environment.
+The way automation of project creation with add.sh works is pretty simple. It copies base docker-compose.yml and some associated files of a chosen stack (residing in, for example, scripts/lemp_base), and then replaces placeholder strings like namegoeshere, domaingoeshere etc. with your own inputs. The final docker-compose.yml in the project folder is then ran with docker-compose up -d.
 
-This is why I was working on support for SSH-ing into each app, with each app being assigned a unique available port. 
+## Notes:
 
-And that's also why the add.sh script has a "redirector" option, for cases where you just want your server (like a VPS) to redirect a subdomain elsewhere.
+The scripts were first created as a way of deploying a Docker based web hosting environment, and then adapted for the purpose of deploying a Vagrant based local development environment.
 
-I left these in for now because they still might be marginally useful even in the context of local development.
+The LEMP stack set up is adapted from [Frekans7 Docker Compose LEMP stack](https://github.com/frekans7/docker-compose-lemp)
 
+This is more of a personal project without guarantees, but if you find it useful go for it! 
