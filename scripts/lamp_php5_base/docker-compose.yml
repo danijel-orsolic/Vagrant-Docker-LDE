@@ -5,6 +5,7 @@ services:
 # MySQL database container
   namegoeshere-db:
     image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
     volumes:
       - db_data:/var/lib/mysql
     restart: always

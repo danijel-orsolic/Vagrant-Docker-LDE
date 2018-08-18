@@ -4,8 +4,13 @@ services:
   adminer:
     image: dockette/adminer:dg
     restart: always
-    ports:
-      - 8000:80
+    expose:
+      - 80
     environment:
       VIRTUAL_HOST: adminer.local
     container_name: adminer
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
