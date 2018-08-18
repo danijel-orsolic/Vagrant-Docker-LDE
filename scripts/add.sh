@@ -78,6 +78,17 @@ echo $pmaport >> used_ports
 
 mkdir -p /home/vagrant/projects/$domain/app
 cp $stack/docker-compose.yml /home/vagrant/projects/$domain/
+
+if [[ "$stack" == lemp_base ]]; then
+mkdir /home/vagrant/projects/$domain/nginx/
+mkdir /home/vagrant/projects/$domain/db/
+cp $stack/default.conf /home/vagrant/projects/$domain/nginx/
+cp $stack/index.php /home/vagrant/projects/$domain/app/
+sed -i "s/namegoeshere/$name/g" /home/vagrant/projects/$domain/nginx/default.conf
+sed -i "s/domaingoeshere/$domain/g" /home/vagrant/projects/$domain/nginx/default.conf
+fi
+
+
 #cp $stack/Dockerfile /vagrant/projects/$domain/
 
 # Modify the new docker-compose.yml and Dockerfiles to reflect chosen information
@@ -102,17 +113,17 @@ cd /vagrant/scripts/
 
 #chown -R vagrant:www-data /vagrant/projects/$domain/app
 
-echo -e "${green}=> Setting up user access.. ${NC}"
+# echo -e "${green}=> Setting up user access.. ${NC}"
 # Install WP and base theme
 #sleep 20
 
-docker exec -ti $name apt-get update -y
-docker exec -ti $name apt-get install openssh-server htop nano -y
-docker exec -ti $name bash -c "sed -i -e 's/#Port 22/Port $sshport/g' /etc/ssh/sshd_config"
-docker exec -ti $name useradd $user
-docker exec -ti $name usermod -aG www-data $user
-docker exec -ti $name bash -c "echo \"$user:$pass\" | chpasswd"
-docker exec -ti $name service ssh start
+# docker exec -ti $name apt-get update -y
+# docker exec -ti $name apt-get install openssh-server htop nano -y
+# docker exec -ti $name bash -c "sed -i -e 's/#Port 22/Port $sshport/g' /etc/ssh/sshd_config"
+# docker exec -ti $name useradd $user
+# docker exec -ti $name usermod -aG www-data $user
+# docker exec -ti $name bash -c "echo \"$user:$pass\" | chpasswd"
+# docker exec -ti $name service ssh start
 
 if [[ "$stack" == wp_base ]]; then
 
@@ -126,10 +137,9 @@ docker exec -ti $name bash -c "echo \"define( 'FS_METHOD', 'direct' );\" >> /var
 docker exec -ti $name bash -c "echo \"define( 'FTP_BASE', '/var/www/html/' );\" >> /var/www/html/wp-config.php"
 docker exec -ti $name bash -c "chown -R $user:www-data /var/www/html/*"
 docker exec -ti $name bash -c "chmod g+wx -R /var/www/html/*"
-fi
-
 docker exec -ti $name bash -c "chown -R $user:www-data /var/www/html"
 docker exec -ti $name bash -c "chmod g+wx -R /var/www/html"
+fi
 
 fi # Ends the confirmation loop for domain, user, and email
 
