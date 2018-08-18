@@ -17,8 +17,7 @@ services:
             LETSENCRYPT_EMAIL: emailgoeshere
 
     namegoeshere-db:
-        image: mariadb:latest
-        command: --default-authentication-plugin=mysql_native_password
+        image: mariadb:5.7
         container_name: namegoeshere-db
         volumes:
             - ./db:/var/lib/mysql:rw
