@@ -1,44 +1,39 @@
-version: "2"
+version: '2'
 
 services:
+    namegoeshere-nginx:
+        image: nginx:stable-alpine
+        container_name: namegoeshere-nginx
+        ports:
+            - "8080:80"
+        volumes:
+            - ./app:/app
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - php
 
-# MySQL database container
-  namegoeshere-db:
-    image: mysql:latest
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: dbrootpass
-      MYSQL_DATABASE: namegoeshere
-      MYSQL_USER: usergoeshere
-      MYSQL_PASSWORD: passgoeshere
-    container_name: namegoeshere-db
+    namegoeshere-db:
+        image: mariadb:latest
+        container_name: namegoeshere-db
+        volumes:
+            - ./database:/var/lib/mysql:rw
+        ports:
+            - "3306:3306"
+        depends_on:
+            - nginx
+        environment:
+            - MYSQL_ROOT_PASSWORD: dbrootpass
+            - MYSQL_DATABASE: namegoeshere
+            - MYSQL_USER: usergoeshere
+            - MYSQL_PASSWORD: passgoeshere
 
-# wordpress container dependent on the db container
-  namegoeshere-wp:
-    depends_on:
-      - namegoeshere-db
-    volumes:
-      - ./app:/var/www/html
-    image: wordpress:latest
-    expose:
-      - 80
-    ports:
-      - 2222:2222
-    restart: always
-    environment:
-      VIRTUAL_HOST: domaingoeshere
-      LETSENCRYPT_HOST: domaingoeshere
-      LETSENCRYPT_EMAIL: emailgoeshere
-      WORDPRESS_DB_NAME: namegoeshere
-      WORDPRESS_DB_HOST: namegoeshere-db
-      WORDPRESS_DB_USER: usergoeshere
-      WORDPRESS_DB_PASSWORD: passgoeshere
-    container_name: namegoeshere
-
-volumes:
-    db_data:
+    namegoeshere-php:
+        image: php:7-fpm-alpine
+        container_name: namegoeshere-php
+        volumes:
+            - ./app:/app
+        ports:
+            - "9000:9000"
 
 networks:
   default:

@@ -16,7 +16,7 @@ services:
     container_name: namegoeshere-db
 
 # wordpress container dependent on the db container
-  namegoeshere-wp:
+  namegoeshere-app:
     depends_on:
       - namegoeshere-db
     volumes:
