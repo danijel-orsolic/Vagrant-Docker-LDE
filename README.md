@@ -1,6 +1,6 @@
 This is a simple but powerful way of deploying a local development environment (LDE) without resorting to something like XAMPP.
 
-The only prerequisites are Vagrant and VirtualBox. On Windows you may also need something like [Mountain Duck(https://mountainduck.io/) if you want to be able to access the VM filesystem from your host, since Vagrant FS has issues with symlinks that are needed for things like NPM.
+The only prerequisites are Vagrant and VirtualBox. On Windows you may also need something like [Mountain Duck](https://mountainduck.io/) if you want to be able to access the VM filesystem from your host, since Vagrant FS has issues with symlinks that are needed for things like NPM.
 
 Once you've got that just clone the repo and run `vagrant up`. 
 
