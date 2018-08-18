@@ -32,9 +32,8 @@ su vagrant -c 'docker network create nginx-proxy'
 su vagrant -c 'mkdir /home/vagrant/projects'
 
 su vagrant -c 'cd /vagrant/scripts/nginx-proxy/ && docker-compose up -d'
-
-docker volume create portainer_data
-docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+su vagrant -c 'cd /vagrant/scripts/adminer/ && docker-compose up -d'
+su vagrant -c 'cd /vagrant/scripts/portainer/ && docker-compose up -d'
 
 touch used_ports
 
