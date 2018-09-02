@@ -2,6 +2,10 @@ This is a simple but powerful way of deploying a local development environment (
 
 The only prerequisites are Vagrant and VirtualBox. On Windows you may also need something like [Mountain Duck](https://mountainduck.io/) if you want to be able to access the VM filesystem from your host, since Vagrant FS has issues with symlinks that are needed for things like NPM.
 
+To allow setting the virtual disk size install the vagrant disksize plugin:
+
+`vagrant plugin install vagrant-disksize`
+
 Once you've got that just clone the repo and run `vagrant up`. 
 
 Then you can enter your VM by running `vagrant ssh`.
@@ -31,5 +35,7 @@ The way automation of project creation with add.sh works is pretty simple. It co
 The scripts were first created as a way of deploying a Docker based web hosting environment, and then adapted for the purpose of deploying a Vagrant based local development environment.
 
 The LEMP stack set up is adapted from [Frekans7 Docker Compose LEMP stack](https://github.com/frekans7/docker-compose-lemp)
+
+If you have problems with disksize remove or comment out the `config.disksize.size = '20GB'` line from VagrantFile and rerun vagrant up.
 
 This is more of a personal project without guarantees, but if you find it useful go for it! 

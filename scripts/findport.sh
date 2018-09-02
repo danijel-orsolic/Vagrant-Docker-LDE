@@ -1,6 +1,5 @@
 #!/bin/bash
 #
-# Please run as root.
 # Usage: bash findport.sh 3000 100
 #
 if [[ -z "$1" || -z "$2" ]]; then

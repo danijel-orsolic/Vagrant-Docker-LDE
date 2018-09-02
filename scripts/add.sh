@@ -1,7 +1,6 @@
 #!/bin/bash
 
-# This script automates deployment of new websites as docker stacks consisting of three containers: 
-# examplecom (wp, php5 or lamp), examplecom-db (mysql) and examplecom-pma (phpmyadmin).
+# This script automates deployment of new websites as docker stacks on virtual hosts. 
 # By Danijel Orsolic
 
 # Defining colors
@@ -10,15 +9,6 @@ red='\033[0;31m'
 green='\033[0;32m'
 cyan='\e[0;36m'
 NC='\033[0m' # No Color
-
-# Variables:
-# $domain (ask) - VIRTUAL_HOST / LETSENCRYPT_HOST / VIRTUAL_HOST for pma = pma-$domain
-# $dbrootpass (generate & show) - MYSQL_ROOT_PASSWORD - $dbrootpass
-# $name (generate & show) - MYSQL_DATABASE / WORDPRESS_DB_NAME / container_name / $name = $domain without dots
-# $user (ask) - MYSQL_USER / PMA_USER / WORDPRESS_DB_USER / container username for SSH
-# $pass (generate & show) - MYSQL_PASSWORD / PMA_PASSWORD / WORDPRESS_DB_PASSWORD
-# $email (ask) - LETSENCRYPT_EMAIL
-# $sshport (generate & show) - host port for SSH to container
 
 echo -e "${cyan}Choose the type of stack to deploy: ${NC}"
 options=("WordPress" "Clean LEMP Stack" "Clean LAMP PHP7" "Clean LAMP PHP5" "Redirect")
@@ -68,15 +58,16 @@ read -r -p "Confirm and continue? [y/N] " response
 if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]
 then
 
-# Generate $dbrootpass, $pass, $name and $sshport, append chosen port to the used_ports file
+# Generate $dbrootpass, $pass, $name. 
+# SSH functionality disabled for local dev env.
 
 dbrootpass=$(date +%s|sha256sum|base64|head -c 32);
 pass=$(pwgen -s 16 1);
 name=${domain//[-._]/};
-sshport=$(bash findport.sh 2200 1);
-echo $sshport >> used_ports
-pmaport=$(bash findport.sh 10000 1);
-echo $pmaport >> used_ports
+# sshport=$(bash findport.sh 2200 1);
+# echo $sshport >> used_ports
+# pmaport=$(bash findport.sh 10000 1);
+# echo $pmaport >> used_ports
 
 # Make the app directory and copy the base docker-compose.yml and Dockerfile there
 
