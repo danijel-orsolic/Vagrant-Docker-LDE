@@ -64,10 +64,10 @@ then
 dbrootpass=$(date +%s|sha256sum|base64|head -c 32);
 pass=$(pwgen -s 16 1);
 name=${domain//[-._]/};
-# sshport=$(bash findport.sh 2200 1);
-# echo $sshport >> used_ports
-# pmaport=$(bash findport.sh 10000 1);
-# echo $pmaport >> used_ports
+sshport=$(bash findport.sh 2200 1);
+echo $sshport >> used_ports
+pmaport=$(bash findport.sh 10000 1);
+echo $pmaport >> used_ports
 
 # Make the app directory and copy the base docker-compose.yml and Dockerfile there
 
